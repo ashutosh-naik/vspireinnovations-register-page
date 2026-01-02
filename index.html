@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Register | SignUp</title>
+  </head>
+  <body>
+    <form id="registerForm">
+      <h2>User Registration</h2>
+
+      <p id="registerError" class="error-msg"></p>
+
+      <input type="text" id="fullName" placeholder="Full Name" />
+      <input type="number" id="age" placeholder="Age" />
+      <input type="tel" id="phone" placeholder="Phone Number" />
+      <input type="email" id="email" placeholder="Email Address" />
+      <textarea id="address" placeholder="Address"></textarea>
+      <input type="number" id="pincode" placeholder="Pincode" />
+      <input type="password" id="password" placeholder="Password" />
+
+      <button type="submit">Register</button>
+
+      <p class="form-link">
+        Already registered?
+        <a href="login.html">Login here</a>
+      </p>
+    </form>
+
+    <script src="script.js"></script>
+  </body>
+</html>

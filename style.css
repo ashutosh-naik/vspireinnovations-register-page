@@ -1,0 +1,194 @@
+/* ===============================
+   FONT IMPORT
+   Using Inter for clean, modern UI
+================================ */
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+/* ===============================
+   GLOBAL RESET & BASE STYLES
+   Applies font and box model
+================================ */
+* {
+  box-sizing: border-box;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+/* ===============================
+   PAGE LAYOUT
+   Centers content vertically & horizontally
+================================ */
+body {
+  margin: 0;
+  padding: 20px;
+  background-color: #f4f6f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* ===============================
+   CARD / CONTAINER STYLES
+   Used for forms & dashboard
+================================ */
+form,
+#userDataContainer {
+  background: #ffffff;
+  padding: 25px 30px;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ===============================
+   HEADINGS
+================================ */
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* ===============================
+   FORM INPUTS & TEXTAREA
+================================ */
+input,
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+textarea {
+  resize: none;
+  height: 80px;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #007bff;
+}
+
+/* ===============================
+   BUTTON STYLES
+   Includes hover animation
+================================ */
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+/* ===============================
+   ERROR MESSAGE STYLES
+================================ */
+.error-msg {
+  color: #dc3545;
+  font-size: 14px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* ===============================
+   FORM NAVIGATION LINKS
+   Register ↔ Login
+================================ */
+.form-link {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.form-link a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.form-link a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+/* ===============================
+   DASHBOARD CONTENT STYLES
+================================ */
+#userDataContainer p {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+#userDataContainer strong {
+  color: #000;
+}
+
+/* ===============================
+   LOGOUT BUTTON
+================================ */
+#logoutBtn {
+  width: 100%;
+  margin-top: 15px;
+  background-color: #dc3545;
+}
+
+#logoutBtn:hover {
+  background-color: #b52a37;
+}
+
+/* ===============================
+   RESPONSIVE DESIGN
+================================ */
+
+/* Tablet screens */
+@media (max-width: 768px) {
+  form,
+  #userDataContainer {
+    padding: 22px;
+  }
+}
+
+/* Mobile screens */
+@media (max-width: 480px) {
+  body {
+    padding: 15px;
+  }
+
+  form,
+  #userDataContainer {
+    padding: 18px;
+    border-radius: 6px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  input,
+  textarea,
+  button {
+    font-size: 14px;
+  }
+}
