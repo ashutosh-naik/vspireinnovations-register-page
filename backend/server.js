@@ -7,15 +7,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-/* ================= MONGODB CONNECTION ================= */
-
 mongoose
   .connect("mongodb://127.0.0.1:27017/registerApp")
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log(err));
 
-/* ================= SIGNUP API ================= */
-// POST /signup
 app.post("/signup", async (req, res) => {
   try {
     const { email, phone } = req.body;
@@ -37,8 +33,6 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-/* ================= LOGIN API ================= */
-// POST /login
 app.post("/login", async (req, res) => {
   try {
     const { loginId, password } = req.body;
@@ -58,8 +52,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-/* ================= GET USER ================= */
-// GET /user/:email
 app.get("/user/:email", async (req, res) => {
   try {
     const user = await User.findOne({ email: req.params.email });
@@ -74,10 +66,6 @@ app.get("/user/:email", async (req, res) => {
   }
 });
 
-/* =====================================================
-   STEP 4: UPDATE USER PROFILE (PUT)
-   ===================================================== */
-// PUT /user/:email
 app.put("/user/:email", async (req, res) => {
   try {
     const updatedUser = await User.findOneAndUpdate(
@@ -102,10 +90,6 @@ app.put("/user/:email", async (req, res) => {
   }
 });
 
-/* =====================================================
-   STEP 5: UPDATE PASSWORD (PATCH)
-   ===================================================== */
-// PATCH /user/password/:email
 app.patch("/user/password/:email", async (req, res) => {
   try {
     const { password } = req.body;
@@ -126,8 +110,6 @@ app.patch("/user/password/:email", async (req, res) => {
   }
 });
 
-/* ================= DELETE USER ================= */
-// DELETE /user/:email
 app.delete("/user/:email", async (req, res) => {
   try {
     await User.findOneAndDelete({ email: req.params.email });
@@ -136,8 +118,6 @@ app.delete("/user/:email", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
-/* ================= SERVER ================= */
 
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");
