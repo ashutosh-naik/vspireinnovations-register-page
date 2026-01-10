@@ -1,6 +1,5 @@
 const API = "http://localhost:5000";
 
-// Simple toast helper used across pages (safely attaches to window)
 function showToast(message, duration = 1500) {
   const t = document.getElementById("toast");
   if (!t) return;
@@ -13,9 +12,6 @@ function showToast(message, duration = 1500) {
 }
 window.showToast = showToast;
 
-/* =========================
-   REGISTER PAGE
-========================= */
 const registerForm = document.getElementById("registerForm");
 const registerError = document.getElementById("registerError");
 
@@ -54,16 +50,17 @@ if (registerForm) {
       }
 
       localStorage.setItem("lastLoginId", user.email);
-      window.location.href = "login.html";
+      showToast("Account created successfully");
+
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 1000);
     } catch {
       registerError.textContent = "Server error";
     }
   });
 }
 
-/* =========================
-   LOGIN PAGE
-========================= */
 const loginForm = document.getElementById("loginForm");
 const loginError = document.getElementById("loginError");
 
@@ -100,28 +97,25 @@ if (loginForm) {
       }
 
       localStorage.setItem("user", JSON.stringify(data.user));
-      window.location.href = "dashboard.html";
+      showToast("Logging in...");
+
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 1000);
     } catch {
       loginError.textContent = "Server error";
     }
   });
 }
 
-/* =========================
-   DASHBOARD PAGE
-========================= */
 const dFullName = document.getElementById("dFullName");
 const user = JSON.parse(localStorage.getItem("user"));
 
-/* Run auth check ONLY on dashboard page */
 if (dFullName && !user) {
   window.location.href = "login.html";
 }
 
 if (dFullName) {
-  // `user` already checked above and loaded from localStorage
-
-  // Display user data
   dFullName.textContent = user.fullName;
   document.getElementById("dAge").textContent = user.age;
   document.getElementById("dPhone").textContent = user.phone;
@@ -129,7 +123,6 @@ if (dFullName) {
   document.getElementById("dAddress").textContent = user.address;
   document.getElementById("dPincode").textContent = user.pincode;
 
-  // ===== DOM references used by profile/password features =====
   const editFullName = document.getElementById("editFullName");
   const editAge = document.getElementById("editAge");
   const editPhone = document.getElementById("editPhone");
@@ -143,7 +136,6 @@ if (dFullName) {
   const confirmChange = document.getElementById("confirmChange");
   const passwordError = document.getElementById("passwordError");
 
-  /* ===== UPDATE PROFILE ===== */
   const updateBtn = document.getElementById("updateProfileBtn");
   const profileError = document.getElementById("profileError");
   let editing = false;
@@ -221,7 +213,6 @@ if (dFullName) {
     });
   }
 
-  /* ===== CHANGE PASSWORD ===== */
   const passwordModal = document.getElementById("passwordModal");
   const changePasswordBtn = document.getElementById("changePasswordBtn");
   const closeModalBtn = document.getElementById("closeModalBtn");
@@ -292,7 +283,6 @@ if (dFullName) {
     });
   }
 
-  /* ===== LOGOUT ===== */
   const logoutBtn = document.getElementById("logoutBtn");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
