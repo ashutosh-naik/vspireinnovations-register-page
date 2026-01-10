@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
+
 :root {
   --bg: #ffffff;
   --card-bg: #ffffff;
@@ -11,6 +13,7 @@
   --success: #00ba7c;
 }
 
+/* ===== GLOBAL ===== */
 * {
   box-sizing: border-box;
   font-family: "Plus Jakarta Sans", "Inter", system-ui, -apple-system,
@@ -28,6 +31,7 @@ body {
   color: var(--text-primary);
 }
 
+/* ===== CARD ===== */
 form,
 #userDataContainer {
   width: 100%;
@@ -36,8 +40,16 @@ form,
   padding: 28px 26px;
   border-radius: 16px;
   border: 1px solid var(--border);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
 
+form:hover,
+#userDataContainer:hover {
+  box-shadow: 0 12px 32px rgba(15, 20, 25, 0.08);
+  transform: translateY(-2px);
+}
+
+/* ===== HEADINGS ===== */
 h2 {
   margin: 0 0 22px;
   text-align: center;
@@ -46,6 +58,7 @@ h2 {
   letter-spacing: -0.02em;
 }
 
+/* ===== INPUTS ===== */
 input,
 textarea {
   width: 100%;
@@ -56,12 +69,13 @@ textarea {
   font-size: 15px;
   color: var(--text-primary);
   background: #ffffff;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease,
+    background 0.18s ease;
 }
 
-textarea {
-  resize: none;
-  height: 90px;
+input:hover,
+textarea:hover {
+  background: #f7f9f9;
 }
 
 input::placeholder,
@@ -73,9 +87,16 @@ input:focus,
 textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 1px var(--primary);
+  box-shadow: 0 0 0 1.5px var(--primary);
+  background: #ffffff;
 }
 
+textarea {
+  resize: none;
+  height: 90px;
+}
+
+/* ===== BUTTONS (GLOBAL) ===== */
 button {
   width: 100%;
   padding: 14px;
@@ -86,13 +107,21 @@ button {
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 button:hover {
   background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(29, 155, 240, 0.35);
 }
 
+button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* ===== LINKS ===== */
 .form-link {
   margin-top: 18px;
   text-align: center;
@@ -103,23 +132,26 @@ button:hover {
 .form-link a {
   color: var(--primary);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
+  transition: color 0.15s ease;
 }
 
 .form-link a:hover {
+  color: var(--primary-hover);
   text-decoration: underline;
 }
 
+/* ===== DASHBOARD TEXT ===== */
 #userDataContainer p {
   margin: 10px 0;
   font-size: 15px;
-  color: var(--text-primary);
 }
 
 #userDataContainer strong {
   font-weight: 600;
 }
 
+/* ===== SECONDARY BUTTONS ===== */
 #updateProfileBtn {
   margin-top: 16px;
 }
@@ -132,9 +164,11 @@ button:hover {
 }
 
 #changePasswordBtn:hover {
-  background: #f7f9f9;
+  background: #e8f5fd;
+  box-shadow: 0 6px 14px rgba(29, 155, 240, 0.15);
 }
 
+/* ===== LOGOUT ===== */
 #logoutBtn {
   margin-top: 12px;
   background: #ffffff;
@@ -143,9 +177,11 @@ button:hover {
 }
 
 #logoutBtn:hover {
-  background: #fff5f5;
+  background: #fff1f2;
+  box-shadow: 0 6px 14px rgba(244, 33, 46, 0.15);
 }
 
+/* ===== MODAL ===== */
 #passwordModal {
   position: fixed;
   inset: 0;
@@ -154,6 +190,16 @@ button:hover {
   align-items: center;
   justify-content: center;
   z-index: 999;
+  animation: fadeBg 0.25s ease;
+}
+
+@keyframes fadeBg {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal-box {
@@ -163,6 +209,18 @@ button:hover {
   padding: 24px;
   border-radius: 16px;
   border: 1px solid var(--border);
+  animation: scaleIn 0.25s ease;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .modal-box h3 {
@@ -172,6 +230,7 @@ button:hover {
   font-weight: 700;
 }
 
+/* ===== CONFIRM CHECK ===== */
 .confirm-check {
   display: flex;
   align-items: center;
@@ -185,13 +244,35 @@ button:hover {
   width: 16px;
   height: 16px;
   accent-color: var(--primary);
+  cursor: pointer;
 }
 
+.confirm-check label {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ===== PASSWORD BUTTON SPACING ===== */
+#savePasswordBtn {
+  margin-bottom: 12px;
+}
+
+#closeModalBtn {
+  background: #ffffff;
+  color: var(--primary);
+  border: 1px solid var(--border-strong);
+}
+
+#closeModalBtn:hover {
+  background: #e8f5fd;
+}
+
+/* ===== TOAST ===== */
 .toast {
   position: fixed;
   left: 50%;
   bottom: 22px;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(10px);
   padding: 12px 18px;
   background: #0f1419;
   color: #ffffff;
@@ -199,12 +280,17 @@ button:hover {
   font-size: 14px;
   display: none;
   z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .toast.visible {
   display: block;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
+/* ===== MOBILE ===== */
 @media (max-width: 480px) {
   form,
   #userDataContainer {
@@ -216,6 +302,7 @@ button:hover {
   }
 }
 
+/* Hide edit inputs initially */
 #editFullName,
 #editAge,
 #editPhone,
