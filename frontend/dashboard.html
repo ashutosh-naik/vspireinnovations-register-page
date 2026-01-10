@@ -11,76 +11,63 @@
       <h2>User details</h2>
 
       <p>
-        <strong>Name:</strong>
-        <span id="dFullName"></span>
-        <input type="text" id="editFullName" style="display: none" />
+        <strong>Name:</strong> <span id="dFullName"></span
+        ><input id="editFullName" />
       </p>
-
       <p>
-        <strong>Age:</strong>
-        <span id="dAge"></span>
-        <input type="number" id="editAge" style="display: none" />
+        <strong>Age:</strong> <span id="dAge"></span
+        ><input id="editAge" type="number" />
       </p>
-
       <p>
-        <strong>Phone:</strong>
-        <span id="dPhone"></span>
-        <input type="tel" id="editPhone" style="display: none" />
+        <strong>Phone:</strong> <span id="dPhone"></span
+        ><input id="editPhone" />
       </p>
-
       <p>
-        <strong>Email:</strong>
-        <span id="dEmail"></span>
-        <input type="email" id="editEmail" style="display: none" />
+        <strong>Email:</strong> <span id="dEmail"></span
+        ><input id="editEmail" type="email" />
       </p>
-
       <p>
-        <strong>Address:</strong>
-        <span id="dAddress"></span>
-        <textarea id="editAddress" style="display: none"></textarea>
+        <strong>Address:</strong> <span id="dAddress"></span
+        ><textarea id="editAddress"></textarea>
       </p>
-
       <p>
-        <strong>Pincode:</strong>
-        <span id="dPincode"></span>
-        <input type="number" id="editPincode" style="display: none" />
+        <strong>Pincode:</strong> <span id="dPincode"></span
+        ><input id="editPincode" />
       </p>
 
       <p id="profileError" class="error-msg"></p>
+      <p id="profileSuccess" class="success-msg"></p>
 
       <button id="updateProfileBtn">Update Profile</button>
       <button id="changePasswordBtn">Change Password</button>
       <button id="logoutBtn">Logout</button>
     </div>
 
-    <div id="passwordModal" style="display: none">
+    <!-- Password Modal -->
+    <div id="passwordModal">
       <div class="modal-box">
         <h3>Change Password</h3>
 
-        <input
-          type="password"
-          id="newPassword"
-          placeholder="Enter new password"
-        />
-
+        <input type="password" id="newPassword" placeholder="New password" />
         <input
           type="password"
           id="confirmPassword"
-          placeholder="Confirm new password"
+          placeholder="Confirm password"
         />
 
         <div class="confirm-check">
           <input type="checkbox" id="confirmChange" />
-          <label for="confirmChange">I confirm to change my password</label>
+          <label for="confirmChange">I confirm password change</label>
         </div>
 
         <p id="passwordError" class="error-msg"></p>
 
-        <button type="button" id="savePasswordBtn">Save Password</button>
-        <button type="button" id="closeModalBtn">Cancel</button>
+        <button id="savePasswordBtn">Save Password</button>
+        <button id="closeModalBtn">Cancel</button>
       </div>
     </div>
 
+    <div id="toast" class="toast"></div>
     <script src="script.js"></script>
   </body>
 </html>

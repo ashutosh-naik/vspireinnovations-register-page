@@ -77,6 +77,12 @@ button:hover {
   margin-bottom: 10px;
 }
 
+.success-msg {
+  color: green;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
 .form-link {
   margin-top: 15px;
   text-align: center;
@@ -110,7 +116,7 @@ button:hover {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
 }
@@ -163,4 +169,32 @@ button:hover {
   h2 {
     font-size: 18px;
   }
+}
+
+#editFullName,
+#editAge,
+#editPhone,
+#editEmail,
+#editAddress,
+#editPincode {
+  display: none;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  border-radius: 6px;
+  display: none;
+  z-index: 1000;
+}
+.toast.visible {
+  display: block;
+  opacity: 1;
+  transition: opacity 0.2s ease;
 }

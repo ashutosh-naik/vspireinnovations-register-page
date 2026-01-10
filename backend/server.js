@@ -8,8 +8,10 @@ app.use(cors());
 app.use(express.json());
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/registerApp")
-  .then(() => console.log("MongoDB connected"))
+  .connect(
+    "mongodb+srv://registerapp:5in79kEJaWM1gyht@cluster0.nacoei9.mongodb.net/registerApp?retryWrites=true&w=majority"
+  )
+  .then(() => console.log("MongoDB Atlas connected"))
   .catch((err) => console.log(err));
 
 app.post("/signup", async (req, res) => {
@@ -29,6 +31,7 @@ app.post("/signup", async (req, res) => {
 
     res.json({ message: "Signup successful" });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 });
