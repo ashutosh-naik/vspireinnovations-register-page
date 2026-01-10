@@ -180,7 +180,6 @@ button:hover {
   display: none;
 }
 
-/* Toast */
 .toast {
   position: fixed;
   left: 50%;
