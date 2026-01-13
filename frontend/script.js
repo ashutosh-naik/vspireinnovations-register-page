@@ -93,6 +93,7 @@ if (loginForm) {
       }
 
       localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", data.token);
       showToast("Logging in...");
 
       setTimeout(() => {
@@ -161,7 +162,10 @@ if (dFullName) {
       try {
         const res = await fetch(`${API}/user/${user.email}`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
           body: JSON.stringify(updatedUser),
         });
 

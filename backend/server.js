@@ -1,9 +1,16 @@
+const auth = require("./middleware/auth");
 const express = require("express");
-const cors = require("cors");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const User = require("./models/User");
 
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+require("dotenv").config();
+
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
@@ -16,7 +23,7 @@ mongoose
 
 app.post("/signup", async (req, res) => {
   try {
-    const { email, phone } = req.body;
+    const { email, phone, password } = req.body;
 
     const existingUser = await User.findOne({
       $or: [{ email }, { phone }],
@@ -26,10 +33,16 @@ app.post("/signup", async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const newUser = new User(req.body);
-    await newUser.save();
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    res.json({ message: "Signup successful" });
+    const user = new User({
+      ...req.body,
+      password: hashedPassword,
+    });
+
+    await user.save();
+
+    res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
@@ -42,15 +55,38 @@ app.post("/login", async (req, res) => {
 
     const user = await User.findOne({
       $or: [{ email: loginId }, { phone: loginId }],
-      password,
     });
 
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    res.json({ message: "Login success", user });
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    res.json({
+      message: "Login successful",
+      token,
+      user: {
+        fullName: user.fullName,
+        age: user.age,
+        phone: user.phone,
+        email: user.email,
+        address: user.address,
+        pincode: user.pincode,
+      },
+    });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 });
@@ -69,10 +105,10 @@ app.get("/user/:email", async (req, res) => {
   }
 });
 
-app.put("/user/:email", async (req, res) => {
+app.put("/user", auth, async (req, res) => {
   try {
-    const updatedUser = await User.findOneAndUpdate(
-      { email: req.params.email },
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
       {
         fullName: req.body.fullName,
         age: req.body.age,
@@ -89,17 +125,18 @@ app.put("/user/:email", async (req, res) => {
 
     res.json({ message: "Profile updated", user: updatedUser });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
 app.patch("/user/password/:email", async (req, res) => {
   try {
-    const { password } = req.body;
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     const updatedUser = await User.findOneAndUpdate(
       { email: req.params.email },
-      { password },
+      { password: hashedPassword },
       { new: true }
     );
 
@@ -107,7 +144,7 @@ app.patch("/user/password/:email", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json({ message: "Password updated" });
+    res.json({ message: "Password updated successfully" });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
