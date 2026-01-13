@@ -91,9 +91,9 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/user/:email", async (req, res) => {
+app.get("/user", auth, async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.params.email });
+    const user = await User.findById(req.user.id).select("-password");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -101,41 +101,62 @@ app.get("/user/:email", async (req, res) => {
 
     res.json(user);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
 app.put("/user", auth, async (req, res) => {
   try {
+    const { fullName, age, phone, email, address, pincode } = req.body;
+
+    // 🔒 Check if new email already exists (and is not current user)
+    if (email) {
+      const existingUser = await User.findOne({ email });
+      if (existingUser && existingUser._id.toString() !== req.user.id) {
+        return res.status(400).json({ message: "Email already in use" });
+      }
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       req.user.id,
       {
-        fullName: req.body.fullName,
-        age: req.body.age,
-        phone: req.body.phone,
-        address: req.body.address,
-        pincode: req.body.pincode,
+        fullName,
+        age,
+        phone,
+        email, // ✅ email update enabled
+        address,
+        pincode,
       },
       { new: true }
-    );
+    ).select("-password");
 
     if (!updatedUser) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json({ message: "Profile updated", user: updatedUser });
+    res.json({
+      message: "Profile updated successfully",
+      user: updatedUser,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-app.patch("/user/password/:email", async (req, res) => {
+app.patch("/user/password", auth, async (req, res) => {
   try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const { password } = req.body;
 
-    const updatedUser = await User.findOneAndUpdate(
-      { email: req.params.email },
+    if (!password) {
+      return res.status(400).json({ message: "Password is required" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
       { password: hashedPassword },
       { new: true }
     );
@@ -146,15 +167,22 @@ app.patch("/user/password/:email", async (req, res) => {
 
     res.json({ message: "Password updated successfully" });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-app.delete("/user/:email", async (req, res) => {
+app.delete("/user", auth, async (req, res) => {
   try {
-    await User.findOneAndDelete({ email: req.params.email });
-    res.json({ message: "User deleted" });
+    const deletedUser = await User.findByIdAndDelete(req.user.id);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ message: "Account deleted successfully" });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 });

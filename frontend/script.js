@@ -1,5 +1,27 @@
 const API = "http://localhost:5000";
 
+async function loadUserFromServer() {
+  try {
+    const res = await fetch(`${API}/user`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("Unauthorized");
+    }
+
+    const user = await res.json();
+    localStorage.setItem("user", JSON.stringify(user));
+    return user;
+  } catch (err) {
+    console.error(err);
+    localStorage.clear();
+    window.location.href = "login.html";
+  }
+}
+
 function showToast(message, duration = 1500) {
   const t = document.getElementById("toast");
   if (!t) return;
@@ -106,183 +128,153 @@ if (loginForm) {
 }
 
 const dFullName = document.getElementById("dFullName");
-const user = JSON.parse(localStorage.getItem("user"));
-
-if (dFullName && !user) {
-  window.location.href = "login.html";
-}
-
-const greeting = document.getElementById("greeting");
-
-if (greeting && user?.fullName) {
-  const firstName = user.fullName.split(" ")[0];
-  greeting.textContent = `Good to see you, ${firstName}`;
-}
+let user = null;
 
 if (dFullName) {
-  dFullName.textContent = user.fullName;
-  document.getElementById("dAge").textContent = user.age;
-  document.getElementById("dPhone").textContent = user.phone;
-  document.getElementById("dEmail").textContent = user.email;
-  document.getElementById("dAddress").textContent = user.address;
-  document.getElementById("dPincode").textContent = user.pincode;
+  (async () => {
+    user = await loadUserFromServer();
 
+    document.getElementById("greeting").textContent =
+      "Good to see you, " + user.fullName.split(" ")[0];
+
+    dFullName.textContent = user.fullName;
+    document.getElementById("dAge").textContent = user.age || "";
+    document.getElementById("dPhone").textContent = user.phone || "";
+    document.getElementById("dEmail").textContent = user.email || "";
+    document.getElementById("dAddress").textContent = user.address || "";
+    document.getElementById("dPincode").textContent = user.pincode || "";
+
+    setupDashboardActions(user);
+  })();
+}
+
+function setupDashboardActions(user) {
   const editFullName = document.getElementById("editFullName");
   const editAge = document.getElementById("editAge");
   const editPhone = document.getElementById("editPhone");
-  const editEmail = document.getElementById("editEmail");
   const editAddress = document.getElementById("editAddress");
   const editPincode = document.getElementById("editPincode");
 
+  const updateBtn = document.getElementById("updateProfileBtn");
+  const changePasswordBtn = document.getElementById("changePasswordBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const deleteBtn = document.getElementById("deleteAccountBtn");
+
+  const passwordModal = document.getElementById("passwordModal");
+  const savePasswordBtn = document.getElementById("savePasswordBtn");
+  const closeModalBtn = document.getElementById("closeModalBtn");
   const newPassword = document.getElementById("newPassword");
   const confirmPassword = document.getElementById("confirmPassword");
   const confirmChange = document.getElementById("confirmChange");
 
-  const updateBtn = document.getElementById("updateProfileBtn");
   let editing = false;
 
-  if (updateBtn) {
-    updateBtn.addEventListener("click", async () => {
-      if (!editing) {
-        fillEditFields(user);
-        toggleEdit(true);
-        updateBtn.textContent = "Save Profile";
-        editing = true;
-        return;
-      }
+  updateBtn.addEventListener("click", async () => {
+    if (!editing) {
+      editFullName.value = user.fullName;
+      editAge.value = user.age;
+      editPhone.value = user.phone;
+      editAddress.value = user.address;
+      editPincode.value = user.pincode;
 
-      const updatedUser = {
-        fullName: editFullName ? editFullName.value : "",
-        age: editAge ? editAge.value : "",
-        phone: editPhone ? editPhone.value : "",
-        address: editAddress ? editAddress.value : "",
-        pincode: editPincode ? editPincode.value : "",
-      };
+      toggleEdit(true);
+      updateBtn.textContent = "Save Profile";
+      editing = true;
+      return;
+    }
 
-      try {
-        const res = await fetch(`${API}/user/${user.email}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-          body: JSON.stringify(updatedUser),
-        });
+    const updatedUser = {
+      fullName: editFullName.value,
+      age: editAge.value,
+      phone: editPhone.value,
+      email: editEmail.value,
+      address: editAddress.value,
+      pincode: editPincode.value,
+    };
 
-        const data = await res.json();
-        if (!res.ok) {
-          showToast(data.message || "Server error");
-          return;
-        }
-
-        localStorage.setItem("user", JSON.stringify(data.user));
-        showToast("Profile updated successfully");
-
-        setTimeout(() => {
-          location.reload();
-        }, 1000);
-      } catch (err) {
-        showToast("Server error");
-        console.error(err);
-      }
+    const res = await fetch(`${API}/user`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify(updatedUser),
     });
-  }
 
-  function fillEditFields(user) {
-    if (editFullName) editFullName.value = user.fullName;
-    if (editAge) editAge.value = user.age;
-    if (editPhone) editPhone.value = user.phone;
-    if (editEmail) editEmail.value = user.email;
-    if (editAddress) editAddress.value = user.address;
-    if (editPincode) editPincode.value = user.pincode;
-  }
+    const data = await res.json();
+    if (!res.ok) return showToast(data.message);
 
-  function toggleEdit(show) {
-    const fields = [
-      ["dFullName", "editFullName"],
-      ["dAge", "editAge"],
-      ["dPhone", "editPhone"],
-      ["dEmail", "editEmail"],
-      ["dAddress", "editAddress"],
-      ["dPincode", "editPincode"],
-    ];
-    fields.forEach(([span, input]) => {
-      const spanEl = document.getElementById(span);
-      const inputEl = document.getElementById(input);
-      if (spanEl) spanEl.style.display = show ? "none" : "inline";
-      if (inputEl) inputEl.style.display = show ? "inline" : "none";
+    showToast("Profile updated");
+    setTimeout(() => location.reload(), 800);
+  });
+
+  changePasswordBtn.addEventListener("click", () => {
+    passwordModal.style.display = "flex";
+  });
+
+  closeModalBtn.addEventListener("click", () => {
+    passwordModal.style.display = "none";
+    newPassword.value = "";
+    confirmPassword.value = "";
+    confirmChange.checked = false;
+  });
+
+  savePasswordBtn.addEventListener("click", async () => {
+    if (
+      !newPassword.value ||
+      newPassword.value !== confirmPassword.value ||
+      !confirmChange.checked
+    ) {
+      return showToast("Password confirmation invalid");
+    }
+
+    const res = await fetch(`${API}/user/password`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify({ password: newPassword.value }),
     });
-  }
 
-  const passwordModal = document.getElementById("passwordModal");
-  const changePasswordBtn = document.getElementById("changePasswordBtn");
-  const closeModalBtn = document.getElementById("closeModalBtn");
-  const savePasswordBtn = document.getElementById("savePasswordBtn");
+    const data = await res.json();
+    if (!res.ok) return showToast(data.message);
 
-  if (changePasswordBtn && passwordModal) {
-    changePasswordBtn.addEventListener(
-      "click",
-      () => (passwordModal.style.display = "flex")
-    );
-  }
+    showToast("Password updated");
+    passwordModal.style.display = "none";
+  });
 
-  if (closeModalBtn && passwordModal) {
-    closeModalBtn.addEventListener(
-      "click",
-      () => (passwordModal.style.display = "none")
-    );
-  }
+  logoutBtn.addEventListener("click", () => {
+    localStorage.clear();
+    window.location.href = "login.html";
+  });
 
-  if (savePasswordBtn) {
-    savePasswordBtn.addEventListener("click", async () => {
-      if (!newPassword || !confirmPassword || !confirmChange) {
-        console.warn("Password modal elements missing");
-        return;
-      }
+  deleteBtn.addEventListener("click", async () => {
+    if (!confirm("Delete account permanently?")) return;
 
-      const newPass = newPassword.value;
-      const confirmPass = confirmPassword.value;
-      const checked = confirmChange.checked;
-
-      if (!newPass || newPass !== confirmPass || !checked) {
-        showToast("Invalid password confirmation");
-        return;
-      }
-
-      try {
-        const res = await fetch(`${API}/user/password/${user.email}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ password: newPass }),
-        });
-
-        const data = await res.json();
-        if (!res.ok) {
-          showToast(data.message || "Server error");
-          return;
-        }
-
-        showToast("Password updated successfully");
-
-        setTimeout(() => {
-          if (passwordModal) passwordModal.style.display = "none";
-        }, 1200);
-      } catch (err) {
-        showToast("Server error");
-        console.error(err);
-      }
+    await fetch(`${API}/user`, {
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
     });
-  }
 
-  const logoutBtn = document.getElementById("logoutBtn");
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      if (typeof window.showToast === "function")
-        window.showToast("Logging out...");
-      setTimeout(() => {
-        localStorage.clear();
-        window.location.href = "login.html";
-      }, 1000);
-    });
-  }
+    localStorage.clear();
+    window.location.href = "index.html";
+  });
+}
+
+function toggleEdit(show) {
+  const fields = [
+    ["dFullName", "editFullName"],
+    ["dAge", "editAge"],
+    ["dPhone", "editPhone"],
+    ["dAddress", "editAddress"],
+    ["dPincode", "editPincode"],
+  ];
+
+  fields.forEach(([span, input]) => {
+    document.getElementById(span).style.display = show ? "none" : "inline";
+    document.getElementById(input).style.display = show ? "inline" : "none";
+  });
 }

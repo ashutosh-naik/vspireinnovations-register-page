@@ -1,23 +1,22 @@
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
 
 :root {
-  --bg: #ffffff;
+  --bg: #f8fafc;
   --card-bg: #ffffff;
-  --border: #eff3f4;
-  --border-strong: #cfd9de;
-  --text-primary: #0f1419;
-  --text-muted: #536471;
-  --primary: #1d9bf0;
-  --primary-hover: #1a8cd8;
-  --danger: #f4212e;
-  --success: #00ba7c;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-primary: #0f172a;
+  --text-muted: #64748b;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --danger: #dc2626;
+  --danger-bg: #fee2e2;
 }
 
 /* ===== GLOBAL ===== */
 * {
   box-sizing: border-box;
-  font-family: "Plus Jakarta Sans", "Inter", system-ui, -apple-system,
-    sans-serif;
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
 }
 
 body {
@@ -27,7 +26,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 32px;
   color: var(--text-primary);
 }
 
@@ -35,25 +34,19 @@ body {
 form,
 #userDataContainer {
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
   background: var(--card-bg);
-  padding: 28px 26px;
-  border-radius: 16px;
+  padding: 34px 32px;
+  border-radius: 18px;
   border: 1px solid var(--border);
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
-}
-
-form:hover,
-#userDataContainer:hover {
-  box-shadow: 0 12px 32px rgba(15, 20, 25, 0.08);
-  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
 }
 
 /* ===== HEADINGS ===== */
 h2 {
-  margin: 0 0 22px;
+  margin: 0 0 28px;
   text-align: center;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
@@ -63,19 +56,13 @@ input,
 textarea {
   width: 100%;
   padding: 14px 16px;
-  margin-bottom: 14px;
+  margin-bottom: 18px; /* 👈 professional spacing */
   border-radius: 12px;
   border: 1px solid var(--border-strong);
   font-size: 15px;
   color: var(--text-primary);
   background: #ffffff;
-  transition: border-color 0.18s ease, box-shadow 0.18s ease,
-    background 0.18s ease;
-}
-
-input:hover,
-textarea:hover {
-  background: #f7f9f9;
+  transition: border 0.15s ease, box-shadow 0.15s ease;
 }
 
 input::placeholder,
@@ -87,8 +74,7 @@ input:focus,
 textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 1.5px var(--primary);
-  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 textarea {
@@ -96,7 +82,7 @@ textarea {
   height: 90px;
 }
 
-/* ===== BUTTONS (GLOBAL) ===== */
+/* ===== BUTTONS ===== */
 button {
   width: 100%;
   padding: 14px;
@@ -105,25 +91,91 @@ button {
   background: var(--primary);
   color: #ffffff;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 button:hover {
   background: var(--primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 8px 18px rgba(29, 155, 240, 0.35);
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.35);
 }
 
-button:active {
-  transform: translateY(0);
-  box-shadow: none;
+/* spacing between stacked buttons */
+button + button {
+  margin-top: 14px;
+}
+
+/* ===== DASHBOARD DISPLAY ===== */
+#userDataContainer p {
+  margin: 14px 0;
+  font-size: 15px;
+  display: grid;
+  grid-template-columns: 90px 1fr; /* label | value */
+  align-items: center;
+  column-gap: 14px;
+}
+
+#userDataContainer strong {
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 14px;
+  text-align: left;
+  opacity: 0.85;
+}
+
+#userDataContainer span {
+  font-size: 15px;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+#userDataContainer input,
+#userDataContainer textarea {
+  margin: 0; /* remove extra spacing */
+}
+
+/* ===== BUTTON GROUPING ===== */
+#updateProfileBtn {
+  margin-top: 28px;
+}
+
+#changePasswordBtn {
+  background: #ffffff;
+  color: var(--primary);
+  border: 1px solid var(--border-strong);
+}
+
+#changePasswordBtn:hover {
+  background: #eff6ff;
+}
+
+/* ===== LOGOUT ===== */
+#logoutBtn {
+  background: #ffffff;
+  color: var(--danger);
+  border: 1px solid var(--border-strong);
+}
+
+#logoutBtn:hover {
+  background: var(--danger-bg);
+}
+
+/* ===== DELETE ACCOUNT ===== */
+#deleteAccountBtn {
+  margin-top: 18px;
+  background: var(--danger);
+}
+
+#deleteAccountBtn:hover {
+  background: #b91c1c;
+  box-shadow: 0 10px 22px rgba(220, 38, 38, 0.35);
 }
 
 /* ===== LINKS ===== */
 .form-link {
-  margin-top: 18px;
+  margin-top: 22px;
   text-align: center;
   font-size: 14px;
   color: var(--text-muted);
@@ -133,101 +185,41 @@ button:active {
   color: var(--primary);
   text-decoration: none;
   font-weight: 600;
-  transition: color 0.15s ease;
 }
 
 .form-link a:hover {
-  color: var(--primary-hover);
   text-decoration: underline;
-}
-
-/* ===== DASHBOARD TEXT ===== */
-#userDataContainer p {
-  margin: 10px 0;
-  font-size: 15px;
-}
-
-#userDataContainer strong {
-  font-weight: 600;
-}
-
-/* ===== SECONDARY BUTTONS ===== */
-#updateProfileBtn {
-  margin-top: 16px;
-}
-
-#changePasswordBtn {
-  margin-top: 10px;
-  background: #ffffff;
-  color: var(--primary);
-  border: 1px solid var(--border-strong);
-}
-
-#changePasswordBtn:hover {
-  background: #e8f5fd;
-  box-shadow: 0 6px 14px rgba(29, 155, 240, 0.15);
-}
-
-/* ===== LOGOUT ===== */
-#logoutBtn {
-  margin-top: 12px;
-  background: #ffffff;
-  color: var(--danger);
-  border: 1px solid var(--border-strong);
-}
-
-#logoutBtn:hover {
-  background: #fff1f2;
-  box-shadow: 0 6px 14px rgba(244, 33, 46, 0.15);
 }
 
 /* ===== MODAL ===== */
 #passwordModal {
   position: fixed;
   inset: 0;
-  background: rgba(15, 20, 25, 0.4);
+  background: rgba(15, 23, 42, 0.55);
   display: none;
   align-items: center;
   justify-content: center;
   z-index: 999;
-  animation: fadeBg 0.25s ease;
-}
-
-@keyframes fadeBg {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }
 
 .modal-box {
   width: 90%;
-  max-width: 380px;
+  max-width: 400px;
   background: #ffffff;
-  padding: 24px;
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  animation: scaleIn 0.25s ease;
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
 }
 
 .modal-box h3 {
   text-align: center;
-  margin-bottom: 18px;
-  font-size: 18px;
+  margin-bottom: 22px;
+  font-size: 20px;
   font-weight: 700;
+}
+
+.modal-box input {
+  margin-bottom: 16px;
 }
 
 /* ===== CONFIRM CHECK ===== */
@@ -235,7 +227,7 @@ button:active {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 16px 0;
+  margin: 20px 0 26px;
   font-size: 14px;
   color: var(--text-muted);
 }
@@ -244,15 +236,9 @@ button:active {
   width: 16px;
   height: 16px;
   accent-color: var(--primary);
-  cursor: pointer;
 }
 
-.confirm-check label {
-  cursor: pointer;
-  user-select: none;
-}
-
-/* ===== PASSWORD BUTTON SPACING ===== */
+/* ===== MODAL BUTTONS ===== */
 #savePasswordBtn {
   margin-bottom: 12px;
 }
@@ -264,41 +250,37 @@ button:active {
 }
 
 #closeModalBtn:hover {
-  background: #e8f5fd;
+  background: #eff6ff;
 }
 
 /* ===== TOAST ===== */
 .toast {
   position: fixed;
   left: 50%;
-  bottom: 22px;
-  transform: translateX(-50%) translateY(10px);
-  padding: 12px 18px;
-  background: #0f1419;
+  bottom: 28px;
+  transform: translateX(-50%);
+  padding: 12px 20px;
+  background: #0f172a;
   color: #ffffff;
   border-radius: 9999px;
   font-size: 14px;
   display: none;
   z-index: 1000;
-  opacity: 0;
-  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .toast.visible {
   display: block;
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
 }
 
 /* ===== MOBILE ===== */
 @media (max-width: 480px) {
   form,
   #userDataContainer {
-    padding: 22px 20px;
+    padding: 26px 22px;
   }
 
   h2 {
-    font-size: 20px;
+    font-size: 22px;
   }
 }
 
